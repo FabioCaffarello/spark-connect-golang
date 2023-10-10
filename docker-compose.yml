@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+  spark-connet-golang-service:
+    image: fabiocaffarello/spark-connet-golang-service:latest
+    container_name: spark-connet-golang-service
+    # depends_on:
+      # spark:
+        # condition: service_healthy
+    networks:
+      - spark-connet-golang-network
+
+  spark:
+    image: "apache/spark:3.5.0-scala2.12-java11-ubuntu"
+    container_name: spark
+    command:
+      - "/opt/spark/sbin/start-connect-server.sh"
+      - "--conf"
+      - "spark.driver.extraJavaOptions=-Divy.cache.dir=/tmp -Divy.home=/tmp"
+      - "--packages"
+      - "org.apache.spark:spark-connect_2.12:3.5.0"
+    environment:
+      - SPARK_NO_DAEMONIZE=true
+      - SPARK_RPC_AUTHENTICATION_ENABLED=no
+      - SPARK_RPC_ENCRYPTION_ENABLED=no
+      - SPARK_LOCAL_STORAGE_ENCRYPTION_ENABLED=no
+      - SPARK_SSL_ENABLED=no
+    ports:
+      - "4040:4040"
+      - "15002:15002"
+    # healthcheck:
+    #   test: ["CMD", "./.docker/spark-health-check.sh"]
+    #   interval: 30s
+    #   timeout: 10s
+    #   retries: 5
+    networks:
+      - spark-connet-golang-network
+
+networks:
+  spark-connet-golang-network:
+    name: spark-connet-golang-network
+    driver: bridge
+
