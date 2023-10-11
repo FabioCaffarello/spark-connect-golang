@@ -8,8 +8,6 @@ This repository contains a Golang service that connects to Apache Spark using sp
 - [Getting Started](#getting-started)
   - [Building the Docker Image](#building-the-docker-image)
   - [Running the Service](#running-the-service)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Prerequisites
 
